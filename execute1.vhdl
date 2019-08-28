@@ -268,6 +268,12 @@ begin
 					result := result_with_carry(63 downto 0);
 					ctrl_tmp.carry <= result_with_carry(64);
 					result_en := 1;
+				when OP_SRD =>
+					result := ppc_srd(e.read_data1, e.read_data2);
+					result_en := 1;
+				when OP_SRW =>
+					result := ppc_srw(e.read_data1, e.read_data2);
+					result_en := 1;
 				when OP_SUBF =>
 					result := ppc_subf(e.read_data1, e.read_data2);
 					result_en := 1;
@@ -336,7 +342,14 @@ begin
 					if SIM = true then
 						result := ppc_divwu(e.read_data1, e.read_data2);
 						result_en := 1;
-
+					else
+						terminate_out <= '1';
+						report "illegal";
+					end if;
+				when OP_DIVW =>
+					if SIM = true then
+						result := ppc_divw(e.read_data1, e.read_data2);
+						result_en := 1;
 					else
 						terminate_out <= '1';
 						report "illegal";
